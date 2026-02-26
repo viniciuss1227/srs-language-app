@@ -1,17 +1,45 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 from datetime import datetime, timedelta
+import uuid
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Para dev; mude para ["http://localhost:3000"] depois
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 # ===== MODELOS SIMPLES =====
 class CardCreate(BaseModel):
     frente: str
     verso: str
 
+
+class Revisar(BaseModel):
+    acertou: bool
+
+
 # Banco temporário (lista em memória)
 cards_db = []
+
+@app.post("/cards")
+def create_card(card: CardCreate):
+    novo_card = {
+        "id": str(uuid.uuid4()),  # ID único
+        "frente": card.frente,
+        "verso": card.verso,
+        "proxima_revisao": datetime.now().isoformat(),
+        "intervalo_dias": 1
+    }
+    cards_db
+
 
 # ===== ENDPOINTS =====
 

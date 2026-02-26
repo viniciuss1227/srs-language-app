@@ -1,10 +1,22 @@
 from fastapi import FastAPI, Depends
-from sqlalchemy.orm import Session
+#from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from .database import SessionLocal, engine, Base
 from . import models
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permite qualquer site (temporário)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Seus endpoints aqui...
 
 # Cria tabelas automaticamente
 Base.metadata.create_all(bind=engine)
